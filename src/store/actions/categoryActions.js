@@ -2,15 +2,13 @@ export const createCategory = (category) => {
     return async (dispatch, getState, { getFirebase, getFirestore }) => {
         // We pause the dispatch, thanks to thunk middleware (a function) --> 
         // We can now add some asynchronous call to our firestore db before dispatching
-        const firestore = getFirestore();
-        const profile = getState().firebase.profile;
-        const authorId = getState().firebase.auth.uid;
+        const firestore = getFirestore()
+        const profile = getState().firebase.profile
+        const authorId = getState().firebase.auth.uid
 
         try {
-            // Start the Spinner
-            dispatch({ type: 'LOADING_ACTIVATED', payload: true })
-
             const snapshotSimilarLabel = await firestore.collection('categories')
+                .where('authorId', '==', authorId)
                 .where('label', '==', category.label)
                 .get()
 
@@ -22,6 +20,9 @@ export const createCategory = (category) => {
                 })
             } else {
                 try {
+                    // Start the Spinner
+                    dispatch({ type: 'LOADING_ACTIVATED', payload: true })
+
                     const docRef = await firestore.collection('categories').add({
                         ...category,
                         authorFirstName: profile.firstName,
@@ -29,7 +30,6 @@ export const createCategory = (category) => {
                         authorId: authorId,
                         createdAt: new Date()
                     })
-                    console.log("Category added to database...")
 
                     // Display the Popup message
                     const message = `Category ${category.label} successfully created!`
@@ -37,6 +37,11 @@ export const createCategory = (category) => {
 
                     // Set the Category (state) 'id' property (so that it becomes active)
                     dispatch({ type: 'CATEGORY_IDED', payload: docRef.id })
+
+                    // TEST !!!!
+                    const categoryId = docRef.id
+                    console.log("TESTING WITH CATEGORY ID: ", categoryId)
+                    dispatch({ type: 'CATEGORY_FILTERED_NEW', payload: categoryId })
 
                     // Finish the Spinner
                     dispatch({ type: 'LOADING_ACTIVATED', payload: false })
@@ -106,8 +111,8 @@ export const deleteCategoryAction = (categoryId) => {
     return async (dispatch, getState, { getFirebase, getFirestore }) => {
         // We pause the dispatch, thanks to thunk middleware (a function) --> 
         // We can now add some asynchronous call to our firestore db before disptaching
-        const firestore = getFirestore();
-        const authorId = getState().firebase.auth.uid;
+        const firestore = getFirestore()
+        const authorId = getState().firebase.auth.uid
 
         try {
             // Start the Spinner
@@ -117,12 +122,23 @@ export const deleteCategoryAction = (categoryId) => {
             const categoryDocToDelete = await firestore.collection('categories').doc(categoryId).get()
             categoryDocToDelete.ref.delete()
 
+            // Delete all tags which property 'categoryId' equals the catagory deleted
             const tagDocsToDelete = await firestore.collection('tags')
                 .where('authorId', '==', authorId)
                 .where('categoryId', '==', categoryId)
                 .get()
 
             tagDocsToDelete.forEach(doc => {
+                doc.ref.delete()
+            })
+
+            // Delete all favorites which property 'categoryId' equals the catagory deleted
+            const favoriteDocsToDelete = await firestore.collection('favorites')
+                .where('authorId', '==', authorId)
+                .where('categoryId', '==', categoryId)
+                .get()
+
+            favoriteDocsToDelete.forEach(doc => {
                 doc.ref.delete()
             })
 
@@ -137,7 +153,6 @@ export const deleteCategoryAction = (categoryId) => {
 
 export const selectCategory = (payload) => {
     // payload: {label: '...', color: '...'}
-    console.log("SELECTING CATEGORY: payload: ", payload)
     return (dispatch) => {
         dispatch({ type: 'CATEGORY_SELECTED', payload })
     }

@@ -1,11 +1,11 @@
-import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Appbar from "./Appbar";
-import MyDrawer from "./Drawer";
-import Toolbar from "@material-ui/core/Toolbar";
-import CentralComponent from "./CentralComponent";
+import React from "react"
+
+import useMediaQuery from "@material-ui/core/useMediaQuery"
+import CssBaseline from "@material-ui/core/CssBaseline"
+import { makeStyles, useTheme } from "@material-ui/core/styles"
+
+import Appbar from "./Appbar"
+import MyDrawer from "./Drawer"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -13,24 +13,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const MainLayout = ({ children }) => {
-    const classes = useStyles();
-    const theme = useTheme();
+const MainLayout = ({
+    children
+}) => {
+    const classes = useStyles()
+    const theme = useTheme()
     const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
-
-    const [open, setOpen] = React.useState(false);
-
-    const toggleDrawer = event => setOpen(!open);
 
     return (
         <div className={classes.root}>
             <CssBaseline />
-            <Appbar toggleDrawer={toggleDrawer} />
-            <MyDrawer open={open} isMdUp={isMdUp} toggleDrawer={toggleDrawer} />
-            {/* <CentralComponent /> */}
+            <Appbar />
+            <MyDrawer isMdUp={isMdUp} />
             {children}
         </div>
     );
 }
 
-export default MainLayout;
+export default MainLayout

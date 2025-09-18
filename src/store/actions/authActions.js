@@ -1,5 +1,3 @@
-import { getFirebase } from "react-redux-firebase";
-
 export const signIn = (credentials) => {
     return (dispatch, getState, { getFirebase }) => {
         const firebase = getFirebase();
@@ -16,7 +14,6 @@ export const signIn = (credentials) => {
 }
 
 export const signOut = () => {
-    console.log("Function 'signOut' has just been called...")
     return (dispatch, getState, { getFirebase }) => {
         const firebase = getFirebase();
 

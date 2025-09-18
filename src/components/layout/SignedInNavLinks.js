@@ -1,59 +1,96 @@
-import React from 'react';
-import { makeStyles } from "@material-ui/core/styles";
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { signOut } from '../../store/actions/authActions';
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import HomeIcon from '@material-ui/icons/Home';
-import CategoryIcon from '@mui/icons-material/Category';
-import AddIcCallIcon from '@material-ui/icons/AddIcCall';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import StarIcon from '@mui/icons-material/Star';
+import React from 'react'
+import { connect } from 'react-redux'
+
+import { makeStyles } from "@material-ui/core/styles"
+
+import { List, ListItem, ListItemIcon } from "@mui/material"
+
+import HomeIcon from '@mui/icons-material/Home'
+import CategoryIcon from '@mui/icons-material/Category'
+import AddIcCallIcon from '@mui/icons-material/AddIcCall'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import RestaurantIcon from '@mui/icons-material/Restaurant'
+import EventNoteIcon from '@mui/icons-material/EventNote'
+
+import NavListItem from './NavListItem'
+import { signOut } from '../../store/actions/authActions'
+import { openCloseDrawer } from '../../store/actions/drawerActions'
 
 const useStyles = makeStyles(theme => ({
     navlink: {
-        color: '#000088',
+        color: '#091b78',
         fontSize: '1.3rem',
+    },
+    navText: {
+        color: '#091b78',
+        marginLeft: '1.5rem'
     }
-}));
+}))
 
-const SignedInNavLinks = (props) => {
-
+const SignedInNavLinks = ({
+    drawer,
+    signOut, openCloseDrawer
+}) => {
     const classes = useStyles();
+
+    const closeDrawer = () => {
+        if (drawer.open) openCloseDrawer(false)
+    }
+
+    const mySignOut = () => {
+        closeDrawer()
+        signOut()
+    }
 
     return (
         <List>
-            {/* {links} */}
-            <ListItem button key="Home">
-                <ListItemIcon><HomeIcon fontSize="large" /></ListItemIcon>
-                <NavLink to="/" className={classes.navlink}>Home</NavLink>
-            </ListItem>
-            <ListItem button key="Categories">
-                <ListItemIcon><CategoryIcon fontSize="large" /></ListItemIcon>
-                <NavLink to="/categories" className={classes.navlink}>Categories</NavLink>
-            </ListItem>
-            <ListItem button key="Favourites">
-                <ListItemIcon><StarIcon fontSize="large" /></ListItemIcon>
-                <NavLink to="/favourites" className={classes.navlink}>Favourites</NavLink>
-            </ListItem>
-            <ListItem button key="Contact">
-                <ListItemIcon><AddIcCallIcon fontSize="large" /></ListItemIcon>
-                <NavLink to="/create" className={classes.navlink}>Contact</NavLink>
-            </ListItem>
-            <ListItem button key="Logout">
-                <ListItemIcon><ExitToAppIcon fontSize="large" /></ListItemIcon>
-                <a onClick={props.signOut} className={classes.navlink}>Log Out</a>
+            <NavListItem
+                text="Home" navLinkTo="/" icon={<HomeIcon fontSize="large" />} closeDrawer={closeDrawer}
+            />
+            <NavListItem
+                text="Categories" navLinkTo="/categories" icon={<CategoryIcon fontSize="large" />}
+                closeDrawer={closeDrawer}
+            />
+            <NavListItem
+                text="Cart" navLinkTo="/cart" icon={<ShoppingCartIcon fontSize="large" />}
+                closeDrawer={closeDrawer}
+            />
+            <NavListItem
+                text="Recipes" navLinkTo="/recipes" icon={<RestaurantIcon fontSize="large" />}
+                closeDrawer={closeDrawer}
+            />
+            <NavListItem
+                text="Cooking Agenda" navLinkTo="/cookingAgenda" icon={<EventNoteIcon fontSize="large" />}
+                closeDrawer={closeDrawer}
+            />
+            <NavListItem
+                text="Contact" navLinkTo="/contact" icon={<AddIcCallIcon fontSize="large" />}
+                closeDrawer={closeDrawer}
+            />
+            <ListItem button key="Logout" onClick={closeDrawer}>
+                <a onClick={mySignOut} className={classes.navlink}>
+                    <ListItemIcon>
+                        <ExitToAppIcon fontSize="large" />
+                        <div className={classes.navText}>Log Out</div>
+                    </ListItemIcon>
+                </a>
             </ListItem>
         </List>
     );
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
     return {
-        signOut: () => dispatch(signOut())
+        drawer: state.drawer,
     }
 }
 
-export default connect(null, mapDispatchToProps)(SignedInNavLinks);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signOut: () => dispatch(signOut()),
+        openCloseDrawer: (payload) => dispatch(openCloseDrawer(payload)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignedInNavLinks)

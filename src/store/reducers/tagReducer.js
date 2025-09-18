@@ -1,6 +1,7 @@
 const initState = {
     id: null,
     label: null,
+    categoryId: null,
     error: null,
     createdMessage: null,
     updatedMessage: null,
@@ -19,6 +20,7 @@ const tagReducer = (state = initState, action) => {
                 ...state,
                 id: action.payload.id,
                 label: action.payload.label,
+                categoryId: action.payload.categoryId,
                 updatedMessage: null,
                 createdMessage: null,
                 error: null
@@ -29,6 +31,11 @@ const tagReducer = (state = initState, action) => {
                 updatedMessage: null,
                 createdMessage: null,
                 error: action.payload
+            }
+        case 'TAG_IDED':
+            return {
+                ...state,
+                id: action.payload
             }
         default:
             return state;

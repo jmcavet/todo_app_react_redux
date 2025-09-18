@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import CheckIcon from '@mui/icons-material/Check'
+
 import { updateTagAction } from '../../store/actions/tagActions'
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import CheckIcon from '@mui/icons-material/Check';
 
-const DialogTagEdit = (props) => {
-    const { openTagDialog, setOpenTagDialog, updateTagAction, tagSelected } = props
-
+const DialogTagEdit = ({
+    openTagDialog, setOpenTagDialog,
+    tagSelected,
+    updateTagAction
+}) => {
     const [stateTag, setStateTag] = useState({})
 
     useEffect(() => {
@@ -25,7 +24,7 @@ const DialogTagEdit = (props) => {
 
     const handleClose = () => {
         // Close dialog window
-        setOpenTagDialog(false);
+        setOpenTagDialog(false)
 
         // If use enters new label but cancel/close dialog:
         // reset the label to the original one
@@ -47,7 +46,7 @@ const DialogTagEdit = (props) => {
 
         // Close dialog window
         setOpenTagDialog(false)
-    };
+    }
 
     return (
         <div>
@@ -79,7 +78,7 @@ const DialogTagEdit = (props) => {
                 </DialogActions>
             </Dialog>
         </div>
-    );
+    )
 }
 
 const mapStateToProps = (state) => {

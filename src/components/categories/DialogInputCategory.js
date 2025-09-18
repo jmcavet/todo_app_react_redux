@@ -1,125 +1,144 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CheckIcon from '@mui/icons-material/Check';
-import Box from '@mui/material/Box';
+import React, { useState } from "react";
+import { connect } from "react-redux";
 import { RgbaColorPicker } from "react-colorful";
-import { reverseColor, rgbCode } from '../../helper/color';
 
+import {
+  Box,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 
-export default function DialogInputCategory({ createCategory, selectCategory }) {
-    const [open, setOpen] = useState(false)
-    const [state, setState] = useState({});
-    const [category, setCategory] = useState('')
-    const [color, setColor] = useState({ r: 10, g: 25, b: 135, a: 0.8 });
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CheckIcon from "@mui/icons-material/Check";
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+import { reverseColor, rgbCode } from "../../helper/color";
+import {
+  createCategory,
+  selectCategory,
+} from "../../store/actions/categoryActions";
 
-    const handleClose = () => {
-        // Clear Dialog text field
-        setCategory('')
+const DialogInputCategory = ({ createCategory, selectCategory }) => {
+  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({});
+  const [category, setCategory] = useState("");
+  const [color, setColor] = useState({ r: 10, g: 25, b: 135, a: 0.8 });
 
-        setOpen(false);
-    };
+  const handleClickOpen = () => setOpen(true);
 
-    const handleCategoryChange = (e) => {
-        setCategory(e.target.value)
+  const handleClose = () => {
+    // Clear Dialog text field
+    setCategory("");
 
-        setState(prevState => ({
-            ...prevState,
-            [e.target.id]: e.target.value,
-            color: color
-        }))
-    }
+    setOpen(false);
+  };
 
-    const onChangeColor = (c) => {
-        setColor(c)
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
 
-        setState(prevState => ({
-            ...prevState,
-            color: c
-        }))
-    }
+    setState((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+      color: color,
+    }));
+  };
 
-    const handleApply = (e) => {
-        createCategory(state)
+  const onChangeColor = (c) => {
+    setColor(c);
 
-        selectCategory(state)
+    setState((prevState) => ({
+      ...prevState,
+      color: c,
+    }));
+  };
 
-        // Clear Dialog text field
-        setCategory('')
+  const handleApply = (e) => {
+    createCategory(state);
 
-        // Close dialog window
-        setOpen(false);
-    };
+    selectCategory(state);
 
-    return (
-        <div>
-            <Button
-                variant="contained"
-                style={{ background: '#02951A' }}
-                endIcon={<AddCircleOutlineIcon fontSize='large' />}
-                onClick={handleClickOpen}
-            >
-                Add Category
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Add a new category</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="label"
-                        label="Category"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={category}
-                        onChange={handleCategoryChange}
-                    />
-                    <br />
-                    <br />
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        style={{ marginTop: '2rem' }}
-                    >
-                        <RgbaColorPicker
-                            color={color}
-                            onChange={onChangeColor}
-                        />
-                    </Box>
-                    <p
-                        style={{
-                            background: rgbCode(color),
-                            color: reverseColor(color),
-                            fontSize: '1.3rem',
-                            padding: '1rem',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {category}
-                    </p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button
-                        variant="contained"
-                        style={{ background: '#02951A' }}
-                        endIcon={<CheckIcon fontSize='large' />}
-                        onClick={handleApply}
-                    >
-                        Apply
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    );
-}
+    // Clear Dialog text field
+    setCategory("");
+
+    // Close dialog window
+    setOpen(false);
+  };
+
+  const myStyle = {
+    boxRgbaColorPicker: { marginTop: "2rem" },
+    btnApply: { background: "#02951A" },
+    paragraph: {
+      background: rgbCode(color),
+      color: reverseColor(color),
+      fontSize: "1.3rem",
+      padding: "1rem",
+      textAlign: "center",
+    },
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        mt: 2,
+        justifyContent: "center",
+      }}
+    >
+      <Button
+        variant="contained"
+        color="secondary"
+        endIcon={<AddCircleOutlineIcon fontSize="large" />}
+        onClick={handleClickOpen}
+      >
+        New Category
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add a new category</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="label"
+            label="Category"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={category}
+            onChange={handleCategoryChange}
+          />
+          <Box
+            display="flex"
+            justifyContent="center"
+            style={myStyle.boxRgbaColorPicker}
+          >
+            <RgbaColorPicker color={color} onChange={onChangeColor} />
+          </Box>
+          <p style={myStyle.paragraph}>{category}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            variant="contained"
+            style={myStyle.btnApply}
+            endIcon={<CheckIcon fontSize="large" />}
+            onClick={handleApply}
+          >
+            Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createCategory: (category) => dispatch(createCategory(category)),
+    selectCategory: (category) => dispatch(selectCategory(category)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(DialogInputCategory);

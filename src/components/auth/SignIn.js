@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { signIn } from '../../store/actions/authActions'
 import { Navigate } from 'react-router-dom'
-import Toolbar from "@material-ui/core/Toolbar";
+import { connect } from 'react-redux'
+
+import { Toolbar } from "@mui/material"
+
+import { signIn } from '../../store/actions/authActions'
 
 export class SignIn extends Component {
     state = {
@@ -52,8 +54,8 @@ export class SignIn extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        authError: state.auth.authError,
-        auth: state.firebase.auth
+        auth: state.firebase.auth,
+        authError: state.auth.authError
     }
 }
 
@@ -63,4 +65,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn)

@@ -1,11 +1,15 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import { connect } from 'react-redux';
-import { signOut } from '../../store/actions/authActions';
-import SignedInNavLinks from "./SignedInNavLinks";
-import SignedOutNavLinks from "./SignedOutNavLinks";
+import React from 'react'
+import { connect } from 'react-redux'
 
-const drawerWidth = 200;
+import { makeStyles } from "@material-ui/core/styles"
+
+import Drawer from "@material-ui/core/Drawer"
+
+import SignedInNavLinks from "./SignedInNavLinks"
+import SignedOutNavLinks from "./SignedOutNavLinks"
+import { openCloseDrawer } from '../../store/actions/drawerActions'
+
+const drawerWidth = 200
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -27,21 +31,26 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const MyDrawer = (props) => {
+const MyDrawer = ({
+    isMdUp,
+    auth, drawer,
+    openCloseDrawer, }
+) => {
     const classes = useStyles();
 
-    const links = props.auth.uid ? <SignedInNavLinks /> : <SignedOutNavLinks />;
+    const authId = auth.uid
+    const links = authId ? <SignedInNavLinks /> : <SignedOutNavLinks />
 
     return (
         <Drawer
             className={classes.drawer}
-            variant={props.isMdUp ? "permanent" : "temporary"}
+            variant={isMdUp ? "permanent" : "temporary"}
             classes={{
                 paper: classes.drawerPaper
             }}
             anchor="left"
-            open={props.open}
-            onClose={props.toggleDrawer}
+            open={drawer.open}
+            onClose={(e) => openCloseDrawer(!drawer.open)}
         >
             <div className={classes.toolbar} />
             {links}
@@ -49,19 +58,17 @@ const MyDrawer = (props) => {
     )
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        signOut: () => dispatch(signOut())
-    }
-}
-
 const mapStateToProps = (state) => {
     return {
         auth: state.firebase.auth,
-        profile: state.firebase.profile
+        drawer: state.drawer
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyDrawer);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        openCloseDrawer: (payload) => dispatch(openCloseDrawer(payload)),
+    }
+}
 
-// export default MyDrawer;
+export default connect(mapStateToProps, mapDispatchToProps)(MyDrawer)

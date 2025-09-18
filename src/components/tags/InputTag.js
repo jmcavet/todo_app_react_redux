@@ -1,22 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+
+import { Paper, InputBase, Button } from '@mui/material'
+
+import MySnackBar from '../layout/MySnackBar'
 import { createTag } from '../../store/actions/tagActions'
-import MySnackBar from '../layout/MySnackBar';
 
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import Button from '@mui/material/Button';
-
-
-
-const InputTag = (props) => {
-    const { tags, createTag, categoryId } = props;
-
+const InputTag = ({
+    categoryId,
+    auth, tags,
+    createTag
+}) => {
     const [state, setState] = useState({ label: '' });
     const [text, setText] = useState('');
-
+    const authId = auth.uid
+    const [myTags, setMyTags] = useState(null)
     const [dialogMessage, setDialogMessage] = useState({ text: '', severity: '' })
     const [openWarningDialog, setOpenWarningDialog] = useState(false)
+
+    useEffect(() => {
+        if (tags) {
+            const tagsFiltered = tags.filter(tag => tag.authorId === authId)
+            setMyTags(tagsFiltered)
+        }
+    }, [authId, tags])
 
     const handleChange = (e) => {
         setText(e.target.value)
@@ -32,7 +39,12 @@ const InputTag = (props) => {
         e.preventDefault()
 
         // Find if the tag entered by User already exists
-        const duplicateTags = tags.filter((tag) => tag.categoryId === categoryId && tag.label === state.label)
+        const duplicateTags = myTags?.filter(tag => {
+            return (
+                tag.categoryId === categoryId &&
+                tag.label === state.label
+            )
+        })
 
         if (duplicateTags.length > 0) {
             setDialogMessage(prevState => ({
@@ -61,25 +73,24 @@ const InputTag = (props) => {
                 component="form"
                 sx={{
                     p: '2px 2px',
-                    mt: '.4rem',
                     display: 'flex',
                     alignItems: 'center',
                     width: "100%"
                 }}
-                onSubmit={handleSubmit}
             >
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Add new Tag"
                     inputProps={{ 'aria-label': 'add new tag' }}
-                    id="label"
+                    autoComplete="off"
                     value={text}
                     onChange={handleChange}
                 />
                 <Button
-                    type="submit"
                     variant="contained"
                     color="primary"
+                    onClick={handleSubmit}
+                    type="submit"
                 >
                     Add
                 </Button>
@@ -91,6 +102,7 @@ const InputTag = (props) => {
 
 const mapStateToProps = (state) => {
     return {
+        auth: state.firebase.auth,
         tags: state.firestore.ordered.tags,
     }
 }

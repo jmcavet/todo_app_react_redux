@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+
+import { Box, Chip } from '@mui/material'
+import EditSharpIcon from '@mui/icons-material/EditSharp'
+
+import { reverseColor, rgbCode } from '../../helper/color'
 import { selectCategory, setCategoryId } from '../../store/actions/categoryActions'
+import MySnackBar from '../layout/MySnackBar'
 
-import Box from '@mui/material/Box';
-import InputTag from '../tags/InputTag';
-
-import Tag from '../tags/Tag';
-import Chip from '@mui/material/Chip';
-import EditSharpIcon from '@mui/icons-material/EditSharp';
-import { reverseColor, rgbCode } from '../../helper/color';
-import MySnackBar from '../layout/MySnackBar';
-
-const Categories = (props) => {
-    const { categories, tags, setOpenDialog, setOpenTagDialog, selectCategory,
-        setCategoryId, categorySelected, tagSelected } = props
-
+const Categories = ({
+    categories, setOpenDialog,
+    categorySelected, tagSelected,
+    selectCategory, setCategoryId
+}) => {
     const [dialogMessage, setDialogMessage] = useState({ text: '', severity: '' })
     const [actionOccured, setActionOccured] = useState(false)
     const [openWarningDialog, setOpenWarningDialog] = useState(actionOccured)
@@ -92,9 +90,10 @@ const Categories = (props) => {
             <Box sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                justifyContent: 'space-evenly',
-                columnGap: '1rem',
-                rowGap: '2rem'
+                justifyContent: 'center',
+                columnGap: '.7rem',
+                rowGap: '1rem',
+                marginBottom: '1rem'
             }}>
                 {categories?.map((category, index) => {
                     const categoryColorDb = category.color
@@ -134,25 +133,12 @@ const Categories = (props) => {
                 severity={dialogMessage.severity}
                 message={dialogMessage.text}
             />
-
-            <Box sx={{ width: "100%", borderBottom: 1, bgcolor: 'background.paper', borderColor: 'divider' }}>
-                <InputTag categoryId={categorySelected.id} />
-                {tags?.map((tag, index) => {
-                    return (
-                        tag.categoryId === categorySelected.id
-                            ? <Tag key={tag.id} tag={tag} setOpenTagDialog={setOpenTagDialog} />
-                            : ''
-                    )
-                })}
-            </Box>
         </div >
     );
 }
 
 const mapStateToProps = (state) => {
     return {
-        auth: state.firebase.auth,
-        categories: state.firestore.ordered.categories,
         categorySelected: state.categorySelected,
         tagSelected: state.tagSelected,
     }

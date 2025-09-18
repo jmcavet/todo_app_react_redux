@@ -1,28 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+import { RgbaColorPicker } from "react-colorful"
+
+import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import CheckIcon from '@mui/icons-material/Check'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+
 import { updateCategoryAction } from '../../store/actions/categoryActions'
 import { deleteCategoryAction } from '../../store/actions/categoryActions'
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import CheckIcon from '@mui/icons-material/Check';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import Box from '@mui/material/Box';
-import { RgbaColorPicker } from "react-colorful";
-import { reverseColor, rgbCode } from '../../helper/color';
+import { reverseColor, rgbCode } from '../../helper/color'
 
-const DialogCategoryEdit = (props) => {
-    const {
-        openDialog,
-        setOpenDialog,
-        updateCategoryAction,
-        deleteCategoryAction,
-        categorySelected
-    } = props
-
+const DialogCategoryEdit = ({
+    openDialog, setOpenDialog,
+    categorySelected,
+    updateCategoryAction, deleteCategoryAction,
+}) => {
     const [stateCategory, setStateCategory] = useState(
         {
             oldLabel: categorySelected.label,
@@ -56,7 +48,7 @@ const DialogCategoryEdit = (props) => {
 
     const handleClose = () => {
         // Close dialog window
-        setOpenDialog(false);
+        setOpenDialog(false)
 
         // If use enters new label but cancel/close dialog:
         // reset the label to the original one
@@ -70,7 +62,6 @@ const DialogCategoryEdit = (props) => {
         setStateCategory(prevState => ({
             ...prevState,
             label: e.target.value,
-            // color: color
         }))
     }
 
@@ -82,7 +73,6 @@ const DialogCategoryEdit = (props) => {
     }
 
     const handleUpdate = (e) => {
-        console.log("ABOUT TO UPDATE: ", stateCategory)
         updateCategoryAction(stateCategory)
 
         // Close dialog window
@@ -161,7 +151,6 @@ const DialogCategoryEdit = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        auth: state.firebase.auth,
         categorySelected: state.categorySelected
     }
 }

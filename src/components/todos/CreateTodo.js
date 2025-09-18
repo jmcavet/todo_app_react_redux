@@ -1,49 +1,44 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { createTodo } from '../../store/actions/todoActions'
+import React from 'react'
 
-const CreateTodo = (props) => {
-    const { createTodo } = props;
-    const [state, setState] = useState({ description: '' });
+import { Divider, Paper } from '@mui/material'
 
-    const handleChange = (e) => {
-        setState(prevState => ({
-            ...prevState,
-            [e.target.id]: e.target.value
-        }))
-    }
+import CategoryChips from '../categories/CategoryChips'
+import TagChips from '../tags/TagChips'
+import InputTodo from './InputTodo'
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        createTodo(state)
+const CreateTodo = () => {
+    const myStyle = {
+        paper: { p: '.5rem .5rem', width: "100%", background: 'rgb(253, 253, 253)' },
+        dividerCategories: {
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+            marginBottom: '.8rem',
+        },
+        dividerTags: {
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+            marginTop: '1.2rem',
+            marginBottom: '.8rem',
+        },
+        divider: { marginBottom: "1rem" },
     }
 
     return (
-        <div className="container">
-            <form onSubmit={handleSubmit} className="white">
-                <h5 className="grey-text text-darken-3">Create new Todo</h5>
-                <div className="input-field">
-                    <label htmlFor="description">Description</label>
-                    <input type="text" id="description" onChange={handleChange} />
-                </div>
-                <div className="input-field">
-                    <button className="btn lighten-1 z-depth-0">Create</button>
-                </div>
-            </form>
-        </div>
-    );
+        <Paper
+            elevation={3}
+            sx={myStyle.paper}
+        >
+            <div>
+                <Divider style={myStyle.dividerCategories}>Select Category</Divider>
+                <CategoryChips />
+            </div>
+            <div>
+                <Divider style={myStyle.dividerTags}>Select Tag</Divider>
+                <TagChips />
+            </div>
+            <InputTodo />
+        </Paper>
+    )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.firebase.auth
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        createTodo: (todo) => dispatch(createTodo(todo))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTodo)
+export default CreateTodo

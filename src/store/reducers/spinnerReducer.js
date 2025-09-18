@@ -1,5 +1,6 @@
 const initState = {
     loading: false,
+    linear: false,
 }
 
 const spinnerReducer = (state = initState, action) => {
@@ -13,6 +14,16 @@ const spinnerReducer = (state = initState, action) => {
             return {
                 ...state,
                 loading: action.payload,
+            }
+        case 'LINEAR_PROGRESS_ACTIVATED':
+            return {
+                ...state,
+                linear: action.payload,
+            }
+        case 'LINEAR_PROGRESS_DESACTIVATED':
+            return {
+                ...state,
+                linear: action.payload,
             }
         default:
             return state;

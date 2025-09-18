@@ -1,7 +1,7 @@
 const initState = {
     id: null,
-    label: null,
-    color: null,
+    label: 'Initial value',
+    color: { r: '100', g: '150', b: '200', a: '0.8' },
     error: null,
     createdMessage: null,
     updatedMessage: null,

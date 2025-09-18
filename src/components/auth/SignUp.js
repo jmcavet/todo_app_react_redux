@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Navigate } from 'react-router-dom'
 import { connect } from 'react-redux'
+
+import { Toolbar } from "@mui/material"
+
 import { signUp } from '../../store/actions/authActions'
-import Toolbar from "@material-ui/core/Toolbar";
 
 export class SignUp extends Component {
     state = {
