@@ -52,14 +52,17 @@ const Appbar = ({ drawer, settings, openCloseDrawer }) => {
         >
           <Box
             component="img"
-            sx={{ maxHeight: 50 }}
+            sx={{ maxHeight: 42 }}
             alt="Famili Logo"
             src={Logo}
           />
         </NavLink>
         <Typography
           variant="h5"
-          style={{ marginLeft: "auto", textAlign: "center" }}
+          style={{
+            marginLeft: "auto",
+            textAlign: "center",
+          }}
         >
           {settings.pageTitle}
         </Typography>

@@ -24,9 +24,10 @@ const appTheme = createTheme({
       dark: blue[700],
     },
     secondary: {
-      light: teal[300],
-      main: teal[500],
-      dark: teal[700],
+      main: "rgb(245, 97, 41)", // your orange
+      light: "rgb(255, 140, 90)", // a lighter tint (optional)
+      dark: "rgb(200, 70, 25)", // a darker shade (optional)
+      contrastText: "#fff", // text on top of secondary
     },
     contrastText: "yellow",
   },

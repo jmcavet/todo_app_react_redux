@@ -19,7 +19,7 @@ const CookingAgendaPage = ({
 
   useEffect(() => {
     definePageTitle({
-      pageTitle: "Cooking Agenda",
+      pageTitle: "Meal Planner",
     });
   }, []);
 
